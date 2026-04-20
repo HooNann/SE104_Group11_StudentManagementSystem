@@ -1,6 +1,5 @@
 # Backend
 backend/target/
-backend/.mvn/
 backend/.idea/
 backend/*.log
 
@@ -27,3 +26,9 @@ frontend/.vite
 # OS
 .DS_Store
 Thumbs.db
+
+# Internal docs and AI-generated assets
+docs/markdown/
+.agent/
+.github/java-upgrade/
+.github/copilot/
