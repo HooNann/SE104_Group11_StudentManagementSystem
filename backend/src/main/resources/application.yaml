@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: student-management-system
+
+  # DATABASE
+  datasource:
+    url: jdbc:mysql://localhost:3306/student_management_system?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+  # Encoding
+  messages:
+    encoding: UTF-8
+
+server:
+  port: 8081

@@ -1,0 +1,34 @@
+# Backend
+backend/target/
+backend/.idea/
+backend/*.log
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.vite
+
+# Database
+*.sql
+*.db
+
+# Environment
+.env
+.env.local
+.env.development.local
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Internal docs and AI-generated assets
+docs/markdown/
+.agent/
+.github/java-upgrade/
+.github/copilot/
