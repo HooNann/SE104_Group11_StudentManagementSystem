@@ -7,10 +7,10 @@ import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
-import { KeyRound, Mail, Phone, MapPin, Calendar, Hash } from "lucide-react";
+import { KeyRound, Mail, Phone, MapPin, Calendar, Hash, Pencil } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-const studentInfo = {
+const initialStudentInfo = {
   maSV: "SV2024001",
   hoTen: "Trần Thị B",
   ngaySinh: "15/03/2003",
@@ -19,9 +19,6 @@ const studentInfo = {
   sdt: "0901234567",
   diaChi: "123 Nguyễn Huệ, Q.1, TP.HCM",
   lop: "CNTT-K20A",
-  khoa: "Công nghệ Thông tin",
-  khoaHoc: "2020 - 2024",
-  trangThai: "Đang học",
 };
 
 export default function StudentProfilePage() {
@@ -30,12 +27,27 @@ export default function StudentProfilePage() {
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
 
+  const [studentInfo, setStudentInfo] = useState(initialStudentInfo);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState(initialStudentInfo);
+
+  const handleOpenEdit = () => {
+    setEditForm(studentInfo);
+    setIsEditing(true);
+  };
+
+  const handleSaveEdit = () => {
+    setStudentInfo(editForm);
+    setIsEditing(false);
+    toast({ title: "Thành công", description: "Đã cập nhật thông tin cá nhân." });
+  };
+
   const initials = user?.name
     .split(" ")
     .map((w) => w[0])
     .slice(-2)
     .join("")
-    .toUpperCase();
+    .toUpperCase() || "SV";
 
   const handleChangePassword = () => {
     if (!oldPass || !newPass || !confirmPass) {
@@ -62,9 +74,15 @@ export default function StudentProfilePage() {
 
   return (
     <div className="space-y-6 max-w-3xl">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Hồ sơ cá nhân</h1>
-        <p className="text-muted-foreground">Thông tin sinh viên</p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Hồ sơ cá nhân</h1>
+          <p className="text-muted-foreground">Thông tin sinh viên</p>
+        </div>
+        <Button onClick={handleOpenEdit} variant="outline">
+          <Pencil className="h-4 w-4 mr-2" />
+          Sửa thông tin
+        </Button>
       </div>
 
       <Card>
@@ -78,8 +96,7 @@ export default function StudentProfilePage() {
               <p className="text-sm text-muted-foreground">{studentInfo.maSV}</p>
               <div className="flex flex-wrap gap-2 justify-center sm:justify-start pt-1">
                 <Badge variant="secondary">{studentInfo.lop}</Badge>
-                <Badge variant="outline">{studentInfo.khoa}</Badge>
-                <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">{studentInfo.trangThai}</Badge>
+                {/* Đã xóa Badge Ngành học/Khoa và Tình trạng */}
               </div>
             </div>
           </div>
@@ -108,16 +125,44 @@ export default function StudentProfilePage() {
                 <p className="text-sm font-medium text-foreground">{studentInfo.gioiTinh}</p>
               </div>
             </div>
-            <div className="flex items-start gap-3">
-              <Calendar className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
-              <div>
-                <p className="text-xs text-muted-foreground">Khóa học</p>
-                <p className="text-sm font-medium text-foreground">{studentInfo.khoaHoc}</p>
-              </div>
-            </div>
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={isEditing} onOpenChange={setIsEditing}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Sửa thông tin cá nhân</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-1.5">
+              <Label>Họ và tên</Label>
+              <Input value={editForm.hoTen} onChange={(e) => setEditForm({...editForm, hoTen: e.target.value})} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Ngày sinh</Label>
+              <Input value={editForm.ngaySinh} onChange={(e) => setEditForm({...editForm, ngaySinh: e.target.value})} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Số điện thoại</Label>
+              <Input value={editForm.sdt} onChange={(e) => setEditForm({...editForm, sdt: e.target.value})} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Địa chỉ</Label>
+              <Input value={editForm.diaChi} onChange={(e) => setEditForm({...editForm, diaChi: e.target.value})} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Lớp</Label>
+              <Input value={editForm.lop} disabled className="bg-slate-100 text-slate-500" />
+              <p className="text-xs text-muted-foreground">* Liên hệ Phòng Đào tạo để chuyển lớp</p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditing(false)}>Hủy</Button>
+            <Button onClick={handleSaveEdit}>Lưu cập nhật</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Card>
         <CardHeader>
