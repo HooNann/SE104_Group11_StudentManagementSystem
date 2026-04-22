@@ -38,6 +38,8 @@ const navItems: NavItem[] = [
   { title: "Tổng quan", url: "/dashboard", icon: LayoutDashboard, roles: ["admin", "teacher", "student"] },
   { title: "Người dùng", url: "/users", icon: Users, roles: ["admin"] },
   { title: "Sinh viên", url: "/students", icon: GraduationCap, roles: ["admin", "teacher"] },
+  { title: "Lớp học", url: "/classes", icon: School, roles: ["admin"] },
+  { title: "Môn học", url: "/subjects", icon: BookOpen, roles: ["admin"] },
   { title: "Hồ sơ cá nhân", url: "/student-profile", icon: UserCircle, roles: ["student"] },
   { title: "Hồ sơ", url: "/profile", icon: UserCircle, roles: ["admin", "teacher"] },
 ];
