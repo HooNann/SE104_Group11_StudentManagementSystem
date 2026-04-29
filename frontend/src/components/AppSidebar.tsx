@@ -40,6 +40,9 @@ const navItems: NavItem[] = [
   { title: "Sinh viên", url: "/students", icon: GraduationCap, roles: ["admin", "teacher"] },
   { title: "Lớp học", url: "/classes", icon: School, roles: ["admin"] },
   { title: "Môn học", url: "/subjects", icon: BookOpen, roles: ["admin"] },
+  { title: "Phân công giảng dạy", url: "/teaching-assignments", icon: ClipboardList, roles: ["admin"] },
+  { title: "Lịch dạy", url: "/teaching-schedule", icon: CalendarDays, roles: ["teacher"] },
+  { title: "Thời khóa biểu", url: "/student-schedule", icon: CalendarDays, roles: ["student"] },
   { title: "Hồ sơ cá nhân", url: "/student-profile", icon: UserCircle, roles: ["student"] },
   { title: "Hồ sơ", url: "/profile", icon: UserCircle, roles: ["admin", "teacher"] },
 ];
