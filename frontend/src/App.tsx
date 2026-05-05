@@ -17,7 +17,10 @@ import SubjectsPage from "./pages/SubjectsPage";
 import TeachingAssignmentsPage from "./pages/TeachingAssignmentsPage";
 import TeachingSchedulePage from "./pages/TeachingSchedulePage";
 import StudentSchedulePage from "./pages/StudentSchedulePage";
-
+import MyClassesPage from "./pages/MyClassesPage";
+import GradeEntryPage from "./pages/GradeEntryPage";
+import GradeReportsPage from "./pages/GradeReportsPage";
+import MyGradesPage from "./pages/MyGradesPage";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +53,10 @@ const App = () => (
                 <Route path="/teaching-schedule" element={<TeachingSchedulePage />} />
                 <Route path="/student-schedule" element={<StudentSchedulePage />} />
                 <Route path="/teaching-assignments" element={<TeachingAssignmentsPage />} />
+                <Route path="/my-classes" element={<MyClassesPage />} />
+                <Route path="/grade-entry" element={<GradeEntryPage />} />
+                <Route path="/grade-reports" element={<GradeReportsPage />} />
+                <Route path="/my-grades" element={<MyGradesPage />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
