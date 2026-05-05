@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/sidebar";
 
 
+
 interface NavItem {
   title: string;
   url: string;
@@ -46,6 +47,9 @@ const navItems: NavItem[] = [
   { title: "Nhập điểm", url: "/grade-entry", icon: PenLine, roles: ["teacher"] },
   { title: "Bảng điểm", url: "/grade-reports", icon: ClipboardList, roles: ["teacher"] },
   { title: "Điểm của tôi", url: "/my-grades", icon: ClipboardList, roles: ["student"] },
+  { title: "Quản lý thông báo", url: "/announcements", icon: Megaphone, roles: ["admin"] },
+  { title: "Bảng tin", url: "/newsfeed", icon: Newspaper, roles: ["admin", "teacher", "student"] },
+  { title: "Báo cáo thống kê", url: "/reports", icon: FileBarChart, roles: ["admin", "teacher"] },
   { title: "Lịch dạy", url: "/teaching-schedule", icon: CalendarDays, roles: ["teacher"] },
   { title: "Thời khóa biểu", url: "/student-schedule", icon: CalendarDays, roles: ["student"] },
   { title: "Hồ sơ cá nhân", url: "/student-profile", icon: UserCircle, roles: ["student"] },

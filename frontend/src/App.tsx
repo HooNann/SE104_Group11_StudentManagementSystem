@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { AnnouncementProvider } from "@/contexts/AnnouncementContext";
 import Login from "./pages/Login";
 import AppLayout from "./components/AppLayout";
 import Dashboard from "./pages/Dashboard";
@@ -21,6 +22,9 @@ import MyClassesPage from "./pages/MyClassesPage";
 import GradeEntryPage from "./pages/GradeEntryPage";
 import GradeReportsPage from "./pages/GradeReportsPage";
 import MyGradesPage from "./pages/MyGradesPage";
+import AnnouncementsPage from "./pages/AnnouncementsPage";
+import NewsfeedPage from "./pages/NewsfeedPage";
+import ReportsPage from "./pages/ReportsPage";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +43,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <AuthProvider>
+        <AnnouncementProvider>
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Login />} />
@@ -57,10 +62,14 @@ const App = () => (
                 <Route path="/grade-entry" element={<GradeEntryPage />} />
                 <Route path="/grade-reports" element={<GradeReportsPage />} />
                 <Route path="/my-grades" element={<MyGradesPage />} />
+                <Route path="/announcements" element={<AnnouncementsPage />} />
+                <Route path="/newsfeed" element={<NewsfeedPage />} />
+                <Route path="/reports" element={<ReportsPage />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
+        </AnnouncementProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
