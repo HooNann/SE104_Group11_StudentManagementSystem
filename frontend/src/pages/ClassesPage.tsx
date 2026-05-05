@@ -167,7 +167,7 @@ export default function ClassesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Quản lý Lớp học</h2>
+          <h1 className="text-2xl font-bold text-foreground">Quản lý Lớp học</h1>
           <p className="text-muted-foreground">Danh sách các lớp học trong trường</p>
         </div>
         <Button onClick={handleOpenAddClass}>

@@ -86,7 +86,7 @@ export default function SubjectsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Quản lý Môn học</h2>
+          <h1 className="text-2xl font-bold text-foreground">Quản lý Môn học</h1>
           <p className="text-muted-foreground">Danh sách các môn học trong chương trình đào tạo</p>
         </div>
         <Button onClick={handleOpenAdd}>

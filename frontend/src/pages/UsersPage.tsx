@@ -107,7 +107,7 @@ export default function UsersPage() {
     <div className="space-y-6 relative">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Quản lý Người dùng</h2>
+          <h1 className="text-2xl font-bold text-foreground">Quản lý Người dùng</h1>
           <p className="text-muted-foreground">Quản lý tài khoản</p>
         </div>
         <Button onClick={() => setIsModalOpen(true)}>
