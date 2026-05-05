@@ -42,9 +42,9 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">
+        <h1 className="text-2xl font-bold text-foreground">
           Xin chào, {user?.name}!
-        </h2>
+        </h1>
         <p className="text-muted-foreground">
           Vai trò: {roleGreeting[user?.role || "student"]} — Tổng quan hệ thống
         </p>

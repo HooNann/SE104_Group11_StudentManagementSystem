@@ -12,6 +12,7 @@ import {
   Megaphone,
   Newspaper,
   ListChecks,
+  Settings,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth, UserRole } from "@/contexts/AuthContext";
@@ -50,6 +51,7 @@ const navItems: NavItem[] = [
   { title: "Quản lý thông báo", url: "/announcements", icon: Megaphone, roles: ["admin"] },
   { title: "Bảng tin", url: "/newsfeed", icon: Newspaper, roles: ["admin", "teacher", "student"] },
   { title: "Báo cáo thống kê", url: "/reports", icon: FileBarChart, roles: ["admin", "teacher"] },
+  { title: "Cấu hình hệ thống", url: "/settings", icon: Settings, roles: ["admin"] },
   { title: "Lịch dạy", url: "/teaching-schedule", icon: CalendarDays, roles: ["teacher"] },
   { title: "Thời khóa biểu", url: "/student-schedule", icon: CalendarDays, roles: ["student"] },
   { title: "Hồ sơ cá nhân", url: "/student-profile", icon: UserCircle, roles: ["student"] },

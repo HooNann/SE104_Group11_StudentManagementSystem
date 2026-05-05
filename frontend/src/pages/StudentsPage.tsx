@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Search, Plus, Trash2, Pencil, X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { Badge } from "@/components/ui/badge";
 import { createPortal } from "react-dom";
 
 
@@ -23,13 +24,14 @@ interface Student {
   gender: string;
   className: string;
   email: string;
+  status: "Mới tạo" | "Đang học" | "Bảo lưu" | "Tốt nghiệp" | "Thôi học";
 }
 
 const initialStudents: Student[] = [
-  { studentId: 1, studentCode: "24520403", fullName: "Trần Nhật Duy", dateOfBirth: "2006-08-15", gender: "Nam", className: "KTPM2024.1", email: "24520403@uit.edu.vn" },
-  { studentId: 2, studentCode: "24520063", fullName: "Nguyễn Ngọc Thu An", dateOfBirth: "2006-05-20", gender: "Nữ", className: "KTPM2024.1", email: "24520063@uit.edu.vn" },
-  { studentId: 3, studentCode: "24521238", fullName: "Tô Công Hữu Nhân", dateOfBirth: "2006-11-02", gender: "Nam", className: "KTPM2024.2", email: "24521238@uit.edu.vn" },
-  { studentId: 4, studentCode: "24521885", fullName: "Nguyễn Cao Xuân Trung", dateOfBirth: "2006-03-10", gender: "Nam", className: "KTPM2024.3", email: "24521885@uit.edu.vn" }
+  { studentId: 1, studentCode: "24520403", fullName: "Trần Nhật Duy", dateOfBirth: "2006-08-15", gender: "Nam", className: "KTPM2024.1", email: "24520403@uit.edu.vn", status: "Đang học" },
+  { studentId: 2, studentCode: "24520063", fullName: "Nguyễn Ngọc Thu An", dateOfBirth: "2006-05-20", gender: "Nữ", className: "KTPM2024.1", email: "24520063@uit.edu.vn", status: "Đang học" },
+  { studentId: 3, studentCode: "24521238", fullName: "Tô Công Hữu Nhân", dateOfBirth: "2006-11-02", gender: "Nam", className: "KTPM2024.2", email: "24521238@uit.edu.vn", status: "Đang học" },
+  { studentId: 4, studentCode: "24521885", fullName: "Nguyễn Cao Xuân Trung", dateOfBirth: "2006-03-10", gender: "Nam", className: "KTPM2024.3", email: "24521885@uit.edu.vn", status: "Đang học" }
 ];
 
 export default function StudentsPage() {
@@ -50,11 +52,13 @@ export default function StudentsPage() {
   const [newGender, setNewGender] = useState("Nam");
   const [newClass, setNewClass] = useState("");
   const [newEmail, setNewEmail] = useState("");
+  const [newStatus, setNewStatus] = useState<Student["status"]>("Mới tạo");
 
   const resetForm = () => {
     setEditingId(null);
     setNewCode(""); setNewName(""); setNewDob(""); 
     setNewGender("Nam"); setNewClass(""); setNewEmail("");
+    setNewStatus("Mới tạo");
   };
 
   const handleOpenAdd = () => {
@@ -70,6 +74,7 @@ export default function StudentsPage() {
     setNewGender(student.gender);
     setNewClass(student.className);
     setNewEmail(student.email);
+    setNewStatus(student.status);
     setIsModalOpen(true);
   };
 
@@ -78,12 +83,12 @@ export default function StudentsPage() {
     
     if (editingId) {
       setStudents(prev => prev.map(s => s.studentId === editingId ? {
-        ...s, studentCode: newCode, fullName: newName, dateOfBirth: newDob, gender: newGender, className: newClass, email: newEmail
+        ...s, studentCode: newCode, fullName: newName, dateOfBirth: newDob, gender: newGender, className: newClass, email: newEmail, status: newStatus
       } : s));
     } else {
-      const newStudent = {
+      const newStudent: Student = {
         studentId: Date.now(), 
-        studentCode: newCode, fullName: newName, dateOfBirth: newDob, gender: newGender, className: newClass, email: newEmail
+        studentCode: newCode, fullName: newName, dateOfBirth: newDob, gender: newGender, className: newClass, email: newEmail, status: newStatus
       };
       setStudents(prev => [...prev, newStudent]);
     }
@@ -109,7 +114,7 @@ export default function StudentsPage() {
     <div className="space-y-6 relative">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Danh sách Sinh viên</h2>
+          <h1 className="text-2xl font-bold text-foreground">Danh sách Sinh viên</h1>
           <p className="text-muted-foreground">Quản lý hồ sơ sinh viên</p>
         </div>
         {canAddStudent && (
@@ -141,6 +146,7 @@ export default function StudentsPage() {
                 <TableHead>Ngày sinh</TableHead>
                 <TableHead>Giới tính</TableHead>
                 <TableHead>Lớp</TableHead>
+                <TableHead>Trạng thái</TableHead>
                 <TableHead>Email</TableHead>
                 {isAdmin && <TableHead className="text-center">Hành động</TableHead>}
               </TableRow>
@@ -153,6 +159,18 @@ export default function StudentsPage() {
                   <TableCell>{s.dateOfBirth}</TableCell>
                   <TableCell>{s.gender}</TableCell>
                   <TableCell>{s.className}</TableCell>
+                  <TableCell>
+                    <Badge 
+                      variant={
+                        s.status === "Đang học" ? "default" : 
+                        s.status === "Tốt nghiệp" ? "secondary" : 
+                        s.status === "Bảo lưu" ? "outline" : "destructive"
+                      }
+                      className="whitespace-nowrap"
+                    >
+                      {s.status}
+                    </Badge>
+                  </TableCell>
                   <TableCell className="text-muted-foreground">{s.email}</TableCell>
                   {isAdmin && (
                     <TableCell className="text-center">
@@ -213,6 +231,20 @@ export default function StudentsPage() {
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Email</label>
                   <Input required type="email" placeholder="email@gm.uit.edu.com" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Trạng thái</label>
+                  <select 
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" 
+                    value={newStatus} 
+                    onChange={(e) => setNewStatus(e.target.value as Student["status"])}
+                  >
+                    <option value="Mới tạo">Mới tạo</option>
+                    <option value="Đang học">Đang học</option>
+                    <option value="Bảo lưu">Bảo lưu</option>
+                    <option value="Tốt nghiệp">Tốt nghiệp</option>
+                    <option value="Thôi học">Thôi học</option>
+                  </select>
                 </div>
               </div>
               <div className="pt-4 flex justify-end gap-2">

@@ -30,6 +30,9 @@ const classes = [
   { id: "3", label: "CNTT-K21A — Lập trình Web" },
 ];
 
+const academicYears = ["2022-2023", "2023-2024", "2024-2025"];
+const semesters = ["Học kỳ 1", "Học kỳ 2", "Học kỳ Hè"];
+
 function calcAvg(qt: string, gk: string, ck: string): string {
   const a = parseFloat(qt), b = parseFloat(gk), c = parseFloat(ck);
   if (isNaN(a) || isNaN(b) || isNaN(c)) return "—";
@@ -37,6 +40,8 @@ function calcAvg(qt: string, gk: string, ck: string): string {
 }
 
 export default function GradeEntryPage() {
+  const [selectedYear, setSelectedYear] = useState("2023-2024");
+  const [selectedSemester, setSelectedSemester] = useState("Học kỳ 2");
   const [selectedClass, setSelectedClass] = useState(classes[0].id);
   const [grades, setGrades] = useState<StudentGrade[]>(initialGrades);
 
@@ -58,18 +63,36 @@ export default function GradeEntryPage() {
         <ExportButtons filenamePrefix="nhap-diem" />
       </div>
 
-      <div className="max-w-sm">
-        <label className="text-sm font-medium text-foreground mb-1.5 block">Chọn lớp</label>
-        <Select value={selectedClass} onValueChange={setSelectedClass}>
-          <SelectTrigger>
-            <SelectValue placeholder="Chọn lớp học" />
-          </SelectTrigger>
-          <SelectContent>
-            {classes.map((c) => (
-              <SelectItem key={c.id} value={c.id}>{c.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl">
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-muted-foreground uppercase ml-1">Năm học</label>
+          <Select value={selectedYear} onValueChange={setSelectedYear}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {academicYears.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-muted-foreground uppercase ml-1">Học kỳ</label>
+          <Select value={selectedSemester} onValueChange={setSelectedSemester}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {semesters.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-muted-foreground uppercase ml-1">Lớp học</label>
+          <Select value={selectedClass} onValueChange={setSelectedClass}>
+            <SelectTrigger><SelectValue placeholder="Chọn lớp học" /></SelectTrigger>
+            <SelectContent>
+              {classes.map((c) => (
+                <SelectItem key={c.id} value={c.id}>{c.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="rounded-md border">

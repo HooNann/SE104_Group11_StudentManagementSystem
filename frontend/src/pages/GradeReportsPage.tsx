@@ -9,6 +9,9 @@ const classes = [
   { id: "2", label: "CNTT-K20B — Cơ sở dữ liệu" },
 ];
 
+const academicYears = ["2022-2023", "2023-2024", "2024-2025"];
+const semesters = ["Học kỳ 1", "Học kỳ 2", "Học kỳ Hè"];
+
 const reportData = [
   { maSV: "SV001", hoTen: "Nguyễn Văn An", avg: 7.85, rank: "Khá" },
   { maSV: "SV002", hoTen: "Trần Thị Bình", avg: 8.80, rank: "Giỏi" },
@@ -24,6 +27,8 @@ function getRankVariant(rank: string) {
 }
 
 export default function GradeReportsPage() {
+  const [selectedYear, setSelectedYear] = useState("2023-2024");
+  const [selectedSemester, setSelectedSemester] = useState("Học kỳ 2");
   const [selectedClass, setSelectedClass] = useState(classes[0].id);
   const avgAll = (reportData.reduce((s, r) => s + r.avg, 0) / reportData.length).toFixed(2);
 
@@ -34,16 +39,36 @@ export default function GradeReportsPage() {
         <p className="text-muted-foreground">Thống kê và báo cáo kết quả học tập</p>
       </div>
 
-      <div className="max-w-sm">
-        <label className="text-sm font-medium text-foreground mb-1.5 block">Chọn lớp</label>
-        <Select value={selectedClass} onValueChange={setSelectedClass}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
-          <SelectContent>
-            {classes.map((c) => (
-              <SelectItem key={c.id} value={c.id}>{c.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl">
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-muted-foreground uppercase ml-1">Năm học</label>
+          <Select value={selectedYear} onValueChange={setSelectedYear}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {academicYears.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-muted-foreground uppercase ml-1">Học kỳ</label>
+          <Select value={selectedSemester} onValueChange={setSelectedSemester}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {semesters.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-muted-foreground uppercase ml-1">Lớp học</label>
+          <Select value={selectedClass} onValueChange={setSelectedClass}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {classes.map((c) => (
+                <SelectItem key={c.id} value={c.id}>{c.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">

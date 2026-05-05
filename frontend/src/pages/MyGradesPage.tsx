@@ -2,6 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Award } from "lucide-react";
+import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const grades = [
   { monHoc: "Lập trình Web", tinChi: 3, giuaKy: 8.0, cuoiKy: 7.5 },
@@ -12,6 +14,9 @@ const grades = [
   { monHoc: "Cấu trúc dữ liệu", tinChi: 3, giuaKy: 8.5, cuoiKy: 9.0 },
   { monHoc: "Hệ điều hành", tinChi: 3, giuaKy: 6.0, cuoiKy: 7.5 },
 ];
+
+const academicYears = ["2022-2023", "2023-2024", "2024-2025"];
+const semesters = ["Học kỳ 1", "Học kỳ 2", "Học kỳ Hè"];
 
 function calcAvg(gk: number, ck: number) {
   return +(gk * 0.4 + ck * 0.6).toFixed(1);
@@ -25,6 +30,8 @@ function gradeLabel(avg: number) {
 }
 
 export default function MyGradesPage() {
+  const [selectedYear, setSelectedYear] = useState("2023-2024");
+  const [selectedSemester, setSelectedSemester] = useState("Học kỳ 2");
   const enriched = grades.map((g) => ({ ...g, avg: calcAvg(g.giuaKy, g.cuoiKy) }));
   const totalCredits = enriched.reduce((s, g) => s + g.tinChi, 0);
   const gpa = +(enriched.reduce((s, g) => s + g.avg * g.tinChi, 0) / totalCredits).toFixed(2);
@@ -32,9 +39,25 @@ export default function MyGradesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Điểm của tôi</h1>
-        <p className="text-muted-foreground">Kết quả học tập theo từng môn học</p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Điểm của tôi</h1>
+          <p className="text-muted-foreground">Kết quả học tập theo từng môn học</p>
+        </div>
+        <div className="flex gap-3 w-full sm:w-auto">
+          <Select value={selectedYear} onValueChange={setSelectedYear}>
+            <SelectTrigger className="w-[140px]"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {academicYears.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Select value={selectedSemester} onValueChange={setSelectedSemester}>
+            <SelectTrigger className="w-[140px]"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {semesters.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Summary cards */}

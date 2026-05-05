@@ -1,5 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const days = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
 
@@ -29,7 +31,12 @@ const schedule: ScheduleBlock[] = [
   { day: 3, startPeriod: 7, endPeriod: 10, courseCode: "IT003.Q21", subject: "Mạng máy tính", classCode: "IT003.Q21.1", teacher: "Phạm Thị E", room: "Lab 05", isThucHanh: true },
 ];
 
+const academicYears = ["2022-2023", "2023-2024", "2024-2025"];
+const semesters = ["Học kỳ 1", "Học kỳ 2", "Học kỳ Hè"];
+
 export default function StudentSchedulePage() {
+  const [selectedYear, setSelectedYear] = useState("2023-2024");
+  const [selectedSemester, setSelectedSemester] = useState("Học kỳ 2");
   return (
     <div className="space-y-6">
       <div>
@@ -39,8 +46,25 @@ export default function StudentSchedulePage() {
 
       <Card>
         <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-base text-primary font-bold">Học kỳ 2, 2023-2024</CardTitle>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <CardTitle className="text-base text-primary font-bold">
+            {selectedSemester}, {selectedYear}
+          </CardTitle>
+          <div className="flex gap-2">
+            <Select value={selectedYear} onValueChange={setSelectedYear}>
+              <SelectTrigger className="w-[130px] h-8 text-xs font-medium"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {academicYears.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <Select value={selectedSemester} onValueChange={setSelectedSemester}>
+              <SelectTrigger className="w-[120px] h-8 text-xs font-medium"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {semesters.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
             <div className="flex gap-4 text-sm font-medium">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-blue-500/40" />
@@ -51,7 +75,6 @@ export default function StudentSchedulePage() {
                 <span>Thực hành</span>
               </div>
             </div>
-          </div>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-[100px_repeat(6,1fr)] gap-1 mb-2">
