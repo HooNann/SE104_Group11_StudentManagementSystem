@@ -1,5 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const days = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
 
@@ -25,7 +27,12 @@ const schedule: ScheduleBlock[] = [
   { day: 2, startPeriod: 6, endPeriod: 9, courseCode: "IT202.Q21", subject: "Lập trình Web", classCode: "IT202.Q21.2", room: "Lab 01" },
 ];
 
+const academicYears = ["2022-2023", "2023-2024", "2024-2025"];
+const semesters = ["Học kỳ 1", "Học kỳ 2", "Học kỳ Hè"];
+
 export default function TeachingSchedulePage() {
+  const [selectedYear, setSelectedYear] = useState("2023-2024");
+  const [selectedSemester, setSelectedSemester] = useState("Học kỳ 2");
   return (
     <div className="space-y-6">
       <div>
@@ -35,7 +42,25 @@ export default function TeachingSchedulePage() {
 
       <Card>
         <CardHeader className="pb-4 border-b">
-          <CardTitle className="text-base text-primary font-bold">Học kỳ 2, 2023-2024</CardTitle>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <CardTitle className="text-base text-primary font-bold">
+              {selectedSemester}, {selectedYear}
+            </CardTitle>
+            <div className="flex gap-2">
+              <Select value={selectedYear} onValueChange={setSelectedYear}>
+                <SelectTrigger className="w-[130px] h-8 text-xs font-medium"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {academicYears.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              <Select value={selectedSemester} onValueChange={setSelectedSemester}>
+                <SelectTrigger className="w-[120px] h-8 text-xs font-medium"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {semesters.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </CardHeader>
         <CardContent className="pt-4">
           <div className="grid grid-cols-[100px_repeat(6,1fr)] gap-1 mb-2">
