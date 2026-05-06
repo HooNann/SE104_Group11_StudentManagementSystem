@@ -1,0 +1,29 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: sms-mysql
+    environment:
+      MYSQL_DATABASE: student_management_system
+      MYSQL_USER: sms
+      MYSQL_PASSWORD: sms123
+      MYSQL_ROOT_PASSWORD: root123
+    ports:
+      - "3306:3306"
+    volumes:
+      - sms_mysql_data:/var/lib/mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: sms-phpmyadmin
+    environment:
+      PMA_HOST: mysql
+    ports:
+      - "8082:80"
+    depends_on:
+      - mysql
+
+volumes:
+  sms_mysql_data:
