@@ -1,37 +1,51 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GraduationCap, LogIn } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { AxiosError } from "axios";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  
+
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
-  if (isAuthenticated) {
-    navigate("/dashboard", { replace: true });
-    return null;
-  }
+  useEffect(() => {
+    if (isAuthenticated) navigate("/dashboard", { replace: true });
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-    
-    const success = await login(username, password);
-    
-    setLoading(false);
-    if (success) {
+
+    try {
+      await login(username, password);
       navigate("/dashboard");
-    } else {
-      setError("Sai tên đăng nhập hoặc mật khẩu! (Lỗi từ MySQL)");
+    } catch (err) {
+      const axiosErr = err as AxiosError<{ message?: string }>;
+      const status = axiosErr.response?.status;
+      const message = axiosErr.response?.data?.message;
+
+      if (status === 403) {
+        toast({
+          title: "Tài khoản bị khóa",
+          description: message ?? "Vui lòng liên hệ Admin để biết thêm chi tiết.",
+          variant: "destructive",
+        });
+      } else {
+        setError(message ?? "Sai tên đăng nhập hoặc mật khẩu.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,11 +83,13 @@ export default function Login() {
             />
           </div>
 
-          {error && <p className="text-sm font-bold text-red-500 text-center">{error}</p>}
+          {error && (
+            <p className="text-sm font-bold text-red-500 text-center">{error}</p>
+          )}
 
           <Button type="submit" className="w-full" disabled={loading}>
             <LogIn className="h-4 w-4 mr-2" />
-            {loading ? "Đang check Database..." : "Đăng nhập"}
+            {loading ? "Đang đăng nhập..." : "Đăng nhập"}
           </Button>
         </form>
       </div>
