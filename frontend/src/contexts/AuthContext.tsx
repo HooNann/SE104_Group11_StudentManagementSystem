@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
+import api, { tokenStorage } from "@/lib/api";
 
 export type UserRole = "admin" | "teacher" | "student";
 
@@ -11,50 +18,80 @@ export interface User {
 
 interface AuthContextType {
   user: User | null;
-  login: (username: string, password: string) => Promise<boolean>;
+  login: (username: string, password: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
+function decodeJwtPayload(token: string): Record<string, unknown> | null {
+  try {
+    const payload = token.split(".")[1];
+    return JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")));
+  } catch {
+    return null;
+  }
+}
 
-const mockDatabase = [
-  { id: "1", username: "admin", password: "123", name: "Bùi Nguyên Bảo", role: "admin", status: "ACTIVE" },
-  { id: "2", username: "teacher", password: "123", name: "Nguyễn Văn Chiến", role: "teacher", status: "ACTIVE" },
-  { id: "3", username: "student", password: "123", name: "Trần Nhật Duy", role: "student", status: "ACTIVE" },
-  { id: "4", username: "badboy", password: "123", name: "Kẻ phá bĩnh", role: "student", status: "LOCKED" }
-];
+function normalizeRole(role: string): UserRole {
+  const lower = role.toLowerCase().replace(/^role_/, "");
+  if (lower === "admin" || lower === "teacher" || lower === "student") {
+    return lower as UserRole;
+  }
+  return "student";
+}
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
 
-  const login = useCallback(async (username: string, password: string) => {
-    
-    const currentUser = mockDatabase.find(u => u.username === username && u.password === password);
+  // Restore session from localStorage on mount
+  useEffect(() => {
+    const token = tokenStorage.getAccess();
+    if (!token) return;
 
-    if (currentUser) {
-      if (currentUser.status !== "ACTIVE") {
-        alert("TÀI KHOẢN CỦA BẠN ĐÃ BỊ KHÓA! Vui lòng liên hệ Admin để biết thêm chi tiết.");
-        return false;
-      }
-
-      console.log("Quyền đã được cấp:", currentUser.role);
-
-      setUser({
-        id: currentUser.id,
-        name: currentUser.name,
-        role: currentUser.role as UserRole, 
-      });
-      
-      return true;
-    } else {
-      alert("Sai tài khoản hoặc mật khẩu! (Gợi ý: admin/123, teacher/123, student/123)");
-      return false;
+    const payload = decodeJwtPayload(token);
+    if (!payload) {
+      tokenStorage.clear();
+      return;
     }
+
+    const exp = payload.exp as number | undefined;
+    if (exp && Date.now() / 1000 >= exp) {
+      tokenStorage.clear();
+      return;
+    }
+
+    const username = (payload.sub as string) ?? "";
+    const role = normalizeRole((payload.role as string) ?? "student");
+    setUser({ id: username, name: username, role });
   }, []);
 
-  const logout = useCallback(() => setUser(null), []);
+  const login = useCallback(async (username: string, password: string) => {
+    const { data } = await api.post("/auth/login", {
+      identifier: username,
+      password,
+    });
+
+    const { accessToken, refreshToken, role } = data.data;
+    tokenStorage.save(accessToken, refreshToken);
+
+    setUser({
+      id: username,
+      name: username,
+      role: normalizeRole(role),
+    });
+
+    return true;
+  }, []);
+
+  const logout = useCallback(() => {
+    api.post("/auth/logout").catch(() => {});
+    tokenStorage.clear();
+    setUser(null);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
